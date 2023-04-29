@@ -3,6 +3,8 @@ from tkinter import ttk
 from Ciphers.CaesarCipher import CaesarCipher
 from Ciphers.VigenereCipher import VigenereCipher
 from Ciphers.TranspositionCipher import TranspositionCipher
+from Ciphers.RSA_cipher import RSA
+
 
 
 class CipherGUI:
@@ -63,6 +65,59 @@ class CipherGUI:
         self.transposition_input_text.pack(fill='both', expand=True)
         self.transposition_output_text = tk.Text(transposition_tab, height=5)
         self.transposition_output_text.pack(fill='both', expand=True)
+
+        # Create RSA tab
+        """
+        rsa_tab = ttk.Frame(notebook)
+        self.rsa_cipher = RSA()
+        notebook.add(rsa_tab, text='RSA Cipher')
+        rsa_key_label = ttk.Button(rsa_tab, text='Generate new keys', command=self.rsa_generate_keys)
+        rsa_key_label.pack(side='left')
+        self.rsa_encrypt_button = ttk.Button(rsa_tab, text='Encrypt', command=self.rsa_encrypt)
+        self.rsa_encrypt_button.pack(side='left')
+        self.rsa_decrypt_button = ttk.Button(rsa_tab, text='Decrypt', command=self.rsa_decrypt)
+        self.rsa_decrypt_button.pack(side='left')
+        self.rsa_input_text = tk.Text(rsa_tab, height=5)
+        self.rsa_input_text.pack(fill='both', expand=True)
+        self.rsa_output_text = tk.Text(rsa_tab, height=5)
+        self.rsa_output_text.pack(fill='both', expand=True)
+        """
+        rsa_tab = ttk.Frame(notebook)
+        self.rsa_cipher = RSA()
+        self.rsa_cipher.generate_keys()
+        notebook.add(rsa_tab, text='RSA Cipher')
+
+        # Create a frame for the left components
+        rsa_left_frame = ttk.Frame(rsa_tab)
+        rsa_left_frame.pack(side='left')
+
+        # Add the "Generate new keys" button to the left frame
+        rsa_key_label = ttk.Button(rsa_left_frame, text='Generate new keys', command=self.rsa_generate_keys)
+        rsa_key_label.grid(row=0, column=0, sticky="w", padx=10)
+        self.rsa_public_key_label = ttk.Label(rsa_left_frame, text='Public Key: ')
+        self.rsa_public_key_label.grid(row=1, column=0, sticky="w", padx=10)
+        self.rsa_private_key_label = ttk.Label(rsa_left_frame, text='Private Key: ')
+        self.rsa_private_key_label.grid(row=2, column=0, sticky="w", padx=10)
+        self.rsa_public_key_text = ttk.Label(rsa_left_frame, text=f'{str(self.rsa_cipher.get_public_key())}')
+        #self.rsa_public_key_text = ttk.Label(rsa_left_frame, text='')
+        self.rsa_public_key_text.grid(row=1, column=1, sticky="w", padx=10)
+        self.rsa_private_key_text = ttk.Label(rsa_left_frame, text=f'{str(self.rsa_cipher.get_private_key())}')
+        #self.rsa_private_key_text = ttk.Label(rsa_left_frame, text='')
+        self.rsa_private_key_text.grid(row=2, column=1, sticky="w", padx=10)
+
+        
+        # Add the encrypt and decrypt buttons to the right of the RSA tab
+        self.rsa_encrypt_button = ttk.Button(rsa_left_frame, text='Encrypt', command=self.rsa_encrypt)
+        self.rsa_encrypt_button.grid(row=3, column=0, sticky="w", padx=10)
+        self.rsa_decrypt_button = ttk.Button(rsa_left_frame, text='Decrypt', command=self.rsa_decrypt)
+        self.rsa_decrypt_button.grid(row=3, column=1, sticky="w", padx=10)
+
+        # Add the input and output textboxes to the center of the RSA tab
+        self.rsa_input_text = tk.Text(rsa_tab, height=5)
+        self.rsa_input_text.pack(fill='both', expand=True)
+        self.rsa_output_text = tk.Text(rsa_tab, height=5)
+        self.rsa_output_text.pack(fill='both', expand=True)
+
 
     def caesar_encrypt(self):
         try:
@@ -137,8 +192,36 @@ class CipherGUI:
         self.transposition_input_text.delete('1.0', 'end')
         self.transposition_input_text.insert('1.0', plaintext)
 
+    def rsa_generate_keys(self):
+        self.rsa_cipher.generate_keys()
+        self.rsa_public_key_text.config(text=str(self.rsa_cipher.get_public_key()))
+        self.rsa_private_key_text.config(text=str(self.rsa_cipher.get_private_key()))
+        
+        
+    def rsa_encrypt(self):
+        # Get the public key and plaintext
+        plaintext = self.rsa_input_text.get('1.0', tk.END)
+
+        # Encrypt the plaintext using the public key
+        ciphertext = self.rsa_cipher.encrypt(plaintext)
+
+        # Display the ciphertext in the output box
+        self.rsa_output_text.delete('1.0', tk.END)
+        self.rsa_output_text.insert('1.0', ciphertext)
+
+    def rsa_decrypt(self):
+        # Get the private key and ciphertext
+        ciphertext = self.rsa_output_text.get('1.0', tk.END)
+
+        # Decrypt the ciphertext using the private key
+        plaintext = self.rsa_cipher.decrypt(ciphertext)
+
+        # Display the plaintext in the output box
+        self.rsa_input_text.delete('1.0', tk.END)
+        self.rsa_input_text.insert('1.0', plaintext)
+
 if __name__ == '__main__':
     root = tk.Tk()
-    root.geometry("800x600")
+    root.geometry("1250x900")
     gui = CipherGUI(root)
     root.mainloop()
