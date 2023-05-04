@@ -1,9 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import PhotoImage
 from Ciphers.CaesarCipher import CaesarCipher
 from Ciphers.VigenereCipher import VigenereCipher
 from Ciphers.TranspositionCipher import TranspositionCipher
 from Ciphers.RSA_cipher import RSA
+
 
 
 
@@ -12,6 +14,7 @@ class CipherGUI:
         self.root = root
         self.root.title("Cipher GUI")
         self.create_widgets()
+        
 
     def create_widgets(self):
         # Create notebook widget with tabs for each cipher
@@ -223,5 +226,7 @@ class CipherGUI:
 if __name__ == '__main__':
     root = tk.Tk()
     root.geometry("1250x900")
+    icon = PhotoImage(file="icona.gif")
+    root.iconphoto(True, icon)
     gui = CipherGUI(root)
     root.mainloop()
