@@ -226,7 +226,7 @@ class CipherGUI:
 if __name__ == '__main__':
     root = tk.Tk()
     root.geometry("1250x900")
-    icon = PhotoImage(file="icona.gif")
+    icon = PhotoImage(file="inter.png")
     root.iconphoto(True, icon)
     gui = CipherGUI(root)
     root.mainloop()
